@@ -19,7 +19,7 @@
 			<div id="board" class="board-form">
 				<table class="tbl-ex">
 					<tr>
-						<th colspan="4">글보기</th>
+						<th colspan="2">글보기</th>
 					</tr>
 					<tr>
 						<td class="label">제목</td>
@@ -32,6 +32,12 @@
 								${fn:replace(boarddetail.content,newLine,"<br>") }
 							</div>
 						</td>
+					</tr>
+				</table>
+				<!-- comment table -->
+				<table class="tbl-ex">
+					<tr>
+						<th colspan="5">댓글</th>
 					</tr>
 					<c:if test="${comments != null }">
 						<c:forEach items="${comments }" var="comment" varStatus="status">
@@ -48,14 +54,16 @@
 								<td>
 								 ${comment.userName }
 								</td>
+								<td>
+									<c:if test="${comment.userNo==sessionScope.authUser.no }">
+										<a href="/mysite/comment?cmd=delete&no=${comment.no }" class="del">삭제</a>
+									</c:if>
+								</td>
 							</tr>
 						</c:forEach>
 					</c:if>
-					
-					
-					
-					
 				</table>
+				
 				<div class="bottom">
 					<c:if test="${sessionScope.authUser != null }">
 						<form method="post" action="/mysite/comment?cmd=insert&no=${boarddetail.no }" style="float:left;">

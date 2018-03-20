@@ -13,6 +13,36 @@ import com.cafe24.mysite.vo.Comment;
 
 public class CommentDao {
 	
+	public boolean delete(long no) {
+		boolean result = false;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "delete from comment where no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, no);
+			int cnt = pstmt.executeUpdate();
+			
+			result = (cnt==1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}//delete()
+	
 	public long getOrderNo() {
 		long orderNo = 0;
 		
@@ -78,6 +108,40 @@ public class CommentDao {
 		return result;
 	}
 	
+	public Comment get(long no) {
+		Comment comment = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "select board_no from comment where no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, no);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				long boardNo = rset.getLong(1);
+				comment = new Comment();
+				comment.setBoardNo(boardNo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rset != null) rset.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return comment;
+	}
+	
 	public List<Comment> getList(long boardNo) {
 		List<Comment> list = new ArrayList<>();
 		
@@ -87,7 +151,7 @@ public class CommentDao {
 		try {
 			conn = getConnection();
 			
-			String sql = "select content, order_no, date_format(reg_date, '%Y-%m-%d'), user_no, user_name from comment where board_no=? order by order_no";
+			String sql = "select content, order_no, date_format(reg_date, '%Y-%m-%d'), user_no, user_name, no from comment where board_no=? order by order_no";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, boardNo);
 			rset = pstmt.executeQuery();
@@ -97,12 +161,14 @@ public class CommentDao {
 				String regDate = rset.getString(3);
 				long userNo = rset.getLong(4);
 				String userName = rset.getString(5);
+				long no = rset.getLong(6);
 				Comment comment = new Comment();
 				comment.setContent(content);
 				comment.setOrderNo(orderNo);
 				comment.setRegDate(regDate);
 				comment.setUserNo(userNo);
 				comment.setUserName(userName);
+				comment.setNo(no);
 				list.add(comment);
 			}
 			

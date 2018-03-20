@@ -10,6 +10,8 @@ public class CommentActionFactory extends AbstractActionFactory {
 		Action action = null;
 		if("insert".equals(actionName)) {
 			action = new InsertAction();
+		} else if("delete".equals(actionName)) {
+			action = new DeleteAction();
 		}
 		return action;
 	}
