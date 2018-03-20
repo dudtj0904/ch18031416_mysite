@@ -20,15 +20,16 @@ public class BoardDao {
 		PreparedStatement pstmt = null;
 		
 		try {
-			conn = getConnection();
+			CommentDao dao = new CommentDao();
+			dao.deleteGroup(no);
 			
+			conn = getConnection();
 			String sql = "delete from board where no=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
 			int cnt = pstmt.executeUpdate();
 			
 			result = (cnt==1);
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -75,6 +76,8 @@ public class BoardDao {
 		return result;
 		
 	}//update(board)
+
+	
 	
 	public boolean update(long groupNo, long orderNo) { /* 댓글 그룹번호, 오더번호 수정  */
 		boolean result = false;

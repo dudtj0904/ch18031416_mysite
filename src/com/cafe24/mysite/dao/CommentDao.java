@@ -13,6 +13,36 @@ import com.cafe24.mysite.vo.Comment;
 
 public class CommentDao {
 	
+	public boolean deleteGroup(long boardNo) {
+		boolean result = false;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "delete from comment where board_no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, boardNo);
+			int cnt = pstmt.executeUpdate();
+			
+			result = (cnt==1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}//delete()
+	
 	public boolean delete(long no) {
 		boolean result = false;
 		
