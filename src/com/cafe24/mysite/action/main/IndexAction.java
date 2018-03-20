@@ -15,6 +15,7 @@ public class IndexAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		WebUtil.forward(request, response, "/WEB-INF/views/main/index.jsp");
 
+		
 	}
 
 }

@@ -23,6 +23,7 @@ public class BoardDao {
 			CommentDao dao = new CommentDao();
 			dao.deleteGroup(no);
 			
+			
 			conn = getConnection();
 			String sql = "delete from board where no=?";
 			pstmt = conn.prepareStatement(sql);
